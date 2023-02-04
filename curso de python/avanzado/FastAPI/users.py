@@ -100,3 +100,4 @@ def search_user(id: int):
 
     except:
         return {"error":"User not found :("} 
+        
