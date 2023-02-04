@@ -61,7 +61,6 @@ async def user(id: int):
 async def user(user: User):
     
     if type(search_user(user.id)) == User:
-<<<<<<< HEAD:curso de python/avanzado/FastAPI/routers/users.py
         raise HTTPException(status_code=409, detail="El usuario ya existe")
     else:
         users_list.append(user)
@@ -91,10 +90,9 @@ async def user(id: int):
         if saved_user.id == id:
             del users_list[index]
             found = True
-=======
+
         return {"error": "No se ingreso el usuario"}
     else:
->>>>>>> 09cd5801e7f2c8e894620c4f1524abaf8c3f658c:curso de python/avanzado/FastAPI/users.py
         
         users_list.append(user)
     return user
