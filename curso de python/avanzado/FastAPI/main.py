@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from routers import products, users
+
 # Documentación: https://fastapi.tiangolo.com/es/
 
 # Para instalar FastAPI --> pip install "fastapi[all]"
@@ -7,6 +9,10 @@ from fastapi import FastAPI
 # Con el plugin de "Thunder Client" para vscode, realize las peticiones http
 
 app = FastAPI()
+
+# Routers
+app.include_router(products.router)
+app.include_router(users.router)
 
 # Url local: http://127.0.0.1:8000
 @app.get("/") 

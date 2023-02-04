@@ -1,7 +1,11 @@
-from fastapi import FastAPI
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-app = FastAPI()
+router = APIRouter(
+    prefix="/users",
+    responses={404: {"message": "No encontrado"}},
+    tags=["users"]
+)
 
 # Creamos la clase el cual tendra la estructura predefinida
 class User(BaseModel):
@@ -18,50 +22,50 @@ users_list = [
     User(id=3, name="Pequita", surname="Concha", age=21, birthdate="03/11/01")
 ]
 
-@app.get("/usersjson")
-async def usersjson():
-    return [
-        {
-            "name": "Jheral",
-            "surname": "Barrera",
-            "age": "22"
-        },
-        {
-            "name": "Andres",
-            "surname": "Riquelme",
-            "age": "18"
-        },
-        {
-            "name": "Pequita",
-            "surname": "Concha",
-            "age": "21"
-        }
-    ]
+# @router.get("/usersjson")
+# async def usersjson():
+#     return [
+#         {
+#             "name": "Jheral",
+#             "surname": "Barrera",
+#             "age": "22"
+#         },
+#         {
+#             "name": "Andres",
+#             "surname": "Riquelme",
+#             "age": "18"
+#         },
+#         {
+#             "name": "Pequita",
+#             "surname": "Concha",
+#             "age": "21"
+#         }
+#     ]
 
 # Se muestra la lista de usuarios completa
-@app.get("/users")
+@router.get("/")
 async def users():
     return users_list
 
 # Path
-@app.get("/user/{id}")
+@router.get("/{id}")
 async def user(id: int):
     return search_user(id)
 
 # Query
-@app.get("/user/")
+@router.get("/user/")
 async def user(id: int):
     return search_user(id)
 
-@app.post("/user/")
+@router.post("/", status_code=201, response_model= User)
 async def user(user: User):
     if type(search_user(user.id)) == User:
-        return {"error": "El usuario ya existe"}
+        raise HTTPException(status_code=409, detail="El usuario ya existe")
     else:
         users_list.append(user)
         return user
 
-@app.put("/user/")
+@router.put("/")
 async def user(user: User):
 
     found = False
@@ -76,7 +80,7 @@ async def user(user: User):
 
     return user
 
-@app.delete("/user/{id}")
+@router.delete("/{id}")
 async def user(id: int):
 
     found = False
@@ -100,4 +104,3 @@ def search_user(id: int):
 
     except:
         return {"error":"User not found :("} 
-        
