@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from routers import products, users
 
@@ -13,6 +14,7 @@ app = FastAPI()
 # Routers
 app.include_router(products.router)
 app.include_router(users.router)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Url local: http://127.0.0.1:8000
 @app.get("/") 
